@@ -42,6 +42,98 @@ int find_validIdentifier(char id[]) {
 
     return 1;
 }
- int main(){
-    
- }
+
+int main() {
+    ifstream file("file.c");
+    char ch, word[30];
+    int i = 0, line = 1;
+    int in_block_comment = 0;
+
+    cout << "\nTOKENS\n";
+
+    while (file.get(ch)) {
+
+        if (ch == '\n')
+        {
+            line++;
+        }
+
+        if (ch == '/') {
+            char next = file.peek();
+            if (next == '/') {
+                while (file.get(ch) && ch != '\n');
+                line++;
+                continue;
+            }
+            if (next == '*') {
+                file.get();
+                 in_block_comment = 1;
+                while (file.get(ch)) {
+                    if (ch == '\n') line++;
+                    if (ch == '*' && file.peek() == '/') {
+                        file.get();
+                         in_block_comment= 0;
+                        break;
+                    }
+                }
+                continue;
+            }
+        }
+
+        if ( in_block_comment)
+        {
+            continue;
+        }
+
+        if (isalpha(ch) || ch == '_') {
+            i = 0;
+            word[i++] = ch;
+            while (file.get(ch) && (isalnum(ch) || ch == '_'))
+                word[i++] = ch;
+            word[i] = '\0';
+
+            if (find_keyword(word))
+                cout << "Keyword: " << word << endl;
+            else {
+                cout << "Identifier: " << word << endl;
+                if (!find_identifierPresent(word))
+                    strcpy(symbolTable[symCount++], word);
+            }
+            file.unget();
+        }
+
+        else if (isdigit(ch)) {
+            i = 0;
+            word[i++] = ch;
+            int invalid = 0;
+            while (file.get(ch) && (isalnum(ch) || ch == '.')) {
+                if (isalpha(ch)) invalid = 1;
+                word[i++] = ch;
+            }
+            word[i] = '\0';
+
+            if (invalid)
+                cout << "ERROR: LEXICAL ERROR Line " << line << " : " << word << endl;
+            else
+                cout << "Constant: " << word << endl;
+
+            file.unget();
+        }
+
+        else if (ch == '+' || ch == '-' || ch == '*' || ch == '/' || ch == '=') {
+            cout << "Operator: " << ch << endl;
+        }
+
+        else if (ch == '(' || ch == ')' || ch == '{' || ch == '}' ||
+                 ch == ';' || ch == ',' ) {
+            cout << "Punctuation: " << ch << endl;
+        }
+    }
+
+    cout << "\nSYMBOL TABLE ENTRIES\n";
+    for (int i = 0; i < symCount; i++)
+        cout << i + 1 << ") " << symbolTable[i] << endl;
+
+    file.close();
+    return 0;
+}
