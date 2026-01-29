@@ -44,7 +44,7 @@ int find_validIdentifier(char id[]) {
 }
 
 int main() {
-    ifstream file("file.c");
+    ifstream file("Practical3_file.c");
     char ch, word[30];
     int i = 0, line = 1;
     int in_block_comment = 0;
@@ -137,3 +137,4 @@ int main() {
     file.close();
     return 0;
 }
+
