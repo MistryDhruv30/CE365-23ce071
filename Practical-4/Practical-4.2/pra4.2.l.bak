@@ -1,0 +1,31 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+char line[1000];
+%}
+
+%%
+
+[Cc][Hh][Aa][Rr][Uu][Ss][Aa][Tt]    { printf("university"); }
+
+.    { printf("%s", yytext); }
+
+\n   { printf("\n"); }
+
+%%
+
+int main()
+{
+    while(fgets(line, sizeof(line), stdin))
+    {
+        yy_scan_string(line);
+        yylex();
+    }
+    return 0;
+}
+
+int yywrap()
+{
+    return 1;
+}

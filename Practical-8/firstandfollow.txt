@@ -1,0 +1,10 @@
+First(S) = {a, b, (, c}
+First(A) = {a, ε}
+First(B) = {b, ε}
+First(C) = {(, c}
+First(D) = {a, (, c}
+Follow(S) = {), $}
+Follow(A) = {(, b, c}
+Follow(B) = {(, c}
+Follow(C) = {), $}
+Follow(D) = {), $}

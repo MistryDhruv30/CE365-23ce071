@@ -1,0 +1,9 @@
+@echo off
+echo Step 1: Running Bison...
+bison -d parser.y
+echo Step 2: Running Flex...
+flex lexer.l
+echo Step 3: Compiling with GCC...
+gcc parser.tab.c lex.yy.c -o evaluator.exe
+echo Done! Run evaluator.exe to test.
+pause
